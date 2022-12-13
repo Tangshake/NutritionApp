@@ -14,6 +14,7 @@
 # Generated environment files
 .env
 ContainerCerts.props
+/Certs/Temp/
 /Certs/password.txt
 /JwtService/ContainerCerts.env
 /APIGateway/ContainerCerts.env

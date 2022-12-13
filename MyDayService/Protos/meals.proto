@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option csharp_namespace = "MealsCatalog";
+
+service GrpcMeals {
+    rpc GetAllMeals (GrpcRequestMealsModel) returns (GrpcResponseMealsModel);
+}
+
+message GrpcRequestMealsModel {
+    repeated MealsId ids = 1;
+}
+
+message MealsId {
+    string mealId = 1;
+}
+
+message GrpcResponseMealsModel {
+    repeated MealModel meals = 1;
+}
+
+message MealModel {
+    string mealId = 1;
+
+    string name = 2;
+
+    int32 userId = 3;
+
+    repeated IngredientModel ingredients = 4;
+}
+
+message IngredientModel {
+    int32 ingredientId = 1;
+
+    string name = 2;
+
+    string manufacturer = 3;
+
+    int32 kcal = 4;
+        
+    float protein = 5;
+    
+    float fat = 6;
+    
+    float carbohydrates = 7;
+    
+    float roughage = 8;
+
+    float weight = 9;
+}
+
+

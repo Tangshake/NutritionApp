@@ -1,0 +1,97 @@
+{
+    "Routes": [
+        {
+            "DownStreamPathTemplate": "/api/meals/{userId}",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "mealsapi",
+                    "Port": 5021
+                }
+            ],
+            "UpstreamPathTemplate": "/api/meals/{userId}",
+            "UpstreamHttpMethod:": ["GET", "UPDATE"],
+            
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+
+        {
+            "DownStreamPathTemplate": "/api/meals/by/id/{userId}/{id}",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "mealsapi",
+                    "Port": 5021
+                }
+            ],
+            "UpstreamPathTemplate": "/api/meals/by/id/{userId}/{id}",
+            "UpstreamHttpMethod:": ["GET"],
+            
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+
+        {
+            "DownStreamPathTemplate": "/api/meals/by/name/{userId}/{name}",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "mealsapi",
+                    "Port": 5021
+                }
+            ],
+            "UpstreamPathTemplate": "/api/meals/by/name/{userId}/{name}",
+            "UpstreamHttpMethod:": ["GET"],
+            
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+
+        {
+            "DownStreamPathTemplate": "/api/meals/{userId}/{id}",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "mealsapi",
+                    "Port": 5021
+                }
+            ],
+            "UpstreamPathTemplate": "/api/meals/{userId}/{id}",
+            "UpstreamHttpMethod:": ["DELETE"],
+            
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+
+        {
+            "DownStreamPathTemplate": "/api/meals",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "mealsapi",
+                    "Port": 5021
+                }
+            ],
+            "UpstreamPathTemplate": "/api/meals",
+            "UpstreamHttpMethod:": ["POST"],
+            
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        }
+    ],
+    "GlobalConfiguration": {
+ 
+        "BaseUrl": "https://host.docker.internal:5081"
+    }
+}

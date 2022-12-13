@@ -1,0 +1,36 @@
+@using Model.Product
+
+<div class="main-single-product">
+    @if(Product is not null)
+    {
+        <div class="product-property">
+            @Product.Name
+        </div>
+        <div class="product-property">
+            @Product.Kcal
+        </div>
+        <div class="product-property">
+            @Product.Weight
+        </div>
+        <div class="product-property">
+            @Product.Protein
+        </div>
+        <div class="product-property">
+            @Product.Carbohydrates
+        </div>
+        <div class="product-property">
+            @Product.Fat
+        </div>
+        <div class="product-property">
+            @Product.Roughage
+        </div>
+    }
+</div>
+
+@code{
+    [Parameter]
+    public int Weight { get; set; }
+
+    [Parameter]
+    public ProductModel Product { get;set; }
+}

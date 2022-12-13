@@ -1,0 +1,38 @@
+@using NutritionWebClient.Components.ConfirmationDialog
+@using NutritionWebClient.Components.Meal.Browse.SingleMeal
+@using NutritionWebClient.Components.Products
+@using NutritionWebClient.Components.Search
+
+<div class="main-meals-wrapper">
+    <div class="meals-search">
+        <SearchComponent OnSearch="OnSearchStringChange" OnSearchAll="OnSearchAllEvent" SearchPlaceholder=@SearchText ShowSearchAllButton=@ShowSearchButton></SearchComponent>
+    </div>
+    <div class="meals-result">
+        @if(editMode)
+        {
+            <AutoGridComponent Items="@products" CssClass="table-striped table-hover" ColumnsNames="@(new string[] {"Nazwa","Producent"})" ColumnsToExclude="id,kcal,protein,fat,carbohydrates,roughage,weight" OnProductSelected="ProductSelectedEvent"></AutoGridComponent>
+        }
+        else
+        {
+            <AutoGridComponent Items="@meals" CssClass="table-striped table-hover" ColumnsNames="@(new string[] {"Nazwa","Id użytkownika"})" ColumnsToExclude="id,Ingredients" OnProductSelected="MealSelectedEvent"></AutoGridComponent>
+        }
+    </div>
+    <div class="meals-main">
+        @if(editMode && Product is not null)
+        {
+            <div class="product-detail">
+                @if(Product is not null)
+                {
+                    <ProductCard Item="Product" ColumnsToExclude="id,name" ></ProductCard>
+                    <div class="button add-product">
+                        <button @onclick="AddProductToMeal">Dodaj</button>
+                    </div>
+                }
+            </div>
+        }
+        <div hidden="@HideMealDetailsComponent" class="meal-detail">
+            <MealDetails @ref="MealDetailsComponentReference" OnEditMode="OnEditModeEvent" OnSave="OnSaveEvent" OnRemove="OnRemoveEvent" ShowEditButton="true" ></MealDetails>
+        </div>
+    </div>
+</div>
+

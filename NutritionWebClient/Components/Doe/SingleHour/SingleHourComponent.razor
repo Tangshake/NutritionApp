@@ -1,0 +1,506 @@
+@using AutoMapper
+@using Dtos.Doe.Response
+@using Model.Doe.DoeNutritionSummary
+@using NutritionWebClient.Components.ConfirmationDialog
+
+@if(TemporarySingleEntry is not null)
+{
+    <div class="card @(Selected ? "card-selected" :"")" style="width: 650px;" @onclick="@CardClicked">
+    <div class="card-header">
+        
+        @if(HourSummary is not null)
+        {
+            <div class="properties">
+                <div class="property">
+                    <p class="circle-text">Godzina</p>
+                    @if(EditModelEnabled)
+                    {
+                        <div class="rectangle-hour">
+                            <td><input class="edit-card-hour" type="time" @onchange="OnHourChange" value="@(DateTime.Parse(TemporarySingleEntry.Hour).ToString("HH:mm"))"/></td>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="rectangle"><h3>@TemporarySingleEntry.Hour</h3></div>
+                    }
+                </div>
+                <div class="property">
+                    <p class="circle-text">waga</p>
+                    <div class="circle"><p class="circle-data">@HourSummary.Weight.ToString("N0")</p></div>
+                </div>
+                <div class="property">
+                    <p class="circle-text">kcal</p>
+                    <div class="circle"><p class="circle-data">@HourSummary.Kcal.ToString("N0")</p></div>
+                </div>
+                <div class="property">
+                    <p class="circle-text">białko</p>
+                    <div class="circle"><p class="circle-data">@HourSummary.Protein.ToString("N1")</p></div>
+                </div>
+                <div class="property">
+                    <p class="circle-text">węglowodany</p>
+                    <div class="circle"><p class="circle-data">@HourSummary.Carbohydrates.ToString("N1")</p>
+                    </div>
+                </div>
+                <div class="property">
+                    <p class="circle-text">tłuszcz</p>
+                    <div class="circle"><p class="circle-data">@HourSummary.Fat.ToString("N1")</p></div>
+                </div>
+                <div class="property">
+                    <p class="circle-text">błonnik</p>
+                    <div class="circle"><p class="circle-data">@HourSummary.Roughage.ToString("N2")</p></div>
+                </div>
+                <div class="edit-buttons" style="font-size: 12px; display:flex; flex-direction: column; gap: 1px;">
+                    @if(EditModelEnabled)
+                    {
+                        <div class="property">
+                            <button class="remove-card-button" type="button" @onclick="OnCardRemoveButtonClick"><span class="bi-trash"></span></button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="property">
+                            <button class="edit-button @(EditButtonDisabled ? "disabled":"")" type="button" @onclick="OnEditButtonClick"><span class="bi-pencil"></span></button>
+                        </div>
+                    }
+                    <div class="property">
+                        <button class="cancel-button @(CancelButtonDisabled ? "disabled":"")" type="button" @onclick="OnCancelButtonClick"><span class="bi-x-square"></span></button>
+                    </div>
+                    <div class="property">
+                        <button class="save-button @(SaveButtonDisabled ? "disabled":"")" type="button" @onclick="OnSaveButtonClick"><span class="bi-save"></span></button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+        <table class="table table-sm table-bordered">
+            <thead>
+                <th>Nazwa</th>
+                <th>Producent</th>
+                <th>kcal</th>
+                <th>Białko</th>
+                <th>Węglowodany</th>
+                <th>Tłuszcze</th>
+                <th>Błonnik</th>
+                <th>Waga</th>
+                @if(EditModelEnabled)
+                {
+                    <th>Usuń</th>
+                }
+            </thead>
+            <tbody>
+                @if(TemporarySingleEntry.Meals.Count > 0) { <tr style="text-align: center; background-color:whitesmoke;"><td colspan="9" style="text-align: center">Posiłki</td></tr> }
+                @{var mindex = 0;}
+                @foreach(var item in TemporarySingleEntry.Meals)
+                {
+                    int localIndex = mindex;
+                    <tr>
+                        @if(item.Meal is not null)
+                        {
+                            var summary = CalculateSingleMealNutritionSummary(item);
+                            <td>@item.Meal.Name [@summary.Weight g]</td>
+                            <td>użytkownik</td>
+                            <td>@(((summary.Kcal * item.Weight) / summary.Weight).ToString("N1"))</td>
+                            <td>@(((summary.Protein * item.Weight) / summary.Weight).ToString("N1"))</td>
+                            <td>@(((summary.Carbohydrates * item.Weight) / summary.Weight).ToString("N1"))</td>
+                            <td>@(((summary.Fat * item.Weight) / summary.Weight).ToString("N1"))</td>
+                            <td>@(((summary.Roughage * item.Weight) / summary.Weight).ToString("N1"))</td>
+                            
+                            @if(EditModelEnabled)
+                            {
+                                <td><input class="edit-meal-weight" @onchange="@((ChangeEventArgs args) => OnMealWeightChange(args, localIndex))" type="number" min="1" max="10000" value="@item.Weight"/></td>
+                                <td><button class="remove-button" @onclick="@(e => OnMealRemove(localIndex))"><span class="bi-trash"></span></button></td>
+                            }
+                            else
+                            {
+                                <td>@item.Weight</td>
+                            }
+                        }
+                    </tr>
+                    mindex++;
+                }
+                @if(TemporarySingleEntry.Products.Count > 0) { <tr style="text-align: center; background-color:whitesmoke;"><td colspan="9" style="text-align: center;">Produkty</td></tr> }
+                @{var pindex = 0;}
+                @foreach(var item in TemporarySingleEntry.Products)
+                {
+                    int localIndex = pindex;
+                    <tr>
+                        <td>@item.Product.Name</td>
+                        <td>@item.Product.Manufacturer</td>
+                        <td>@(((item.Product.Kcal * item.Weight) / 100.0F).ToString("N1")) </td>
+                        <td>@(((item.Product.Protein * item.Weight) / 100.0F).ToString("N1"))</td>
+                        <td>@(((item.Product.Carbohydrates * item.Weight) / 100.0F).ToString("N1"))</td>
+                        <td>@(((item.Product.Fat * item.Weight) / 100.0F).ToString("N1"))</td>
+                        <td>@(((item.Product.Roughage * item.Weight) / 100.0F).ToString("N2"))</td>
+                        
+                        @if(EditModelEnabled)
+                        {
+                            <td><input class="edit-product-weight" @onchange="@((ChangeEventArgs args) => OnProductWeightChange(args, localIndex))" type="number" min="1" max="10000" value="@item.Weight"/></td>
+                            <td><button class="remove-button" @onclick="@(e => OnProductRemove(localIndex))"><span class="bi-trash"></span></button></td>
+                        }
+                        else
+                        {
+                            <td>@item.Weight</td>
+                        }
+                    </tr>
+                    pindex++;
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (ShowCustomModalDialog)
+    {
+        <ConfirmationDialog DialogType="ConfirmationDialog.ModalDialogType.DeleteCancel" Title="Uwaga!" Text="Czy na pewno chcesz usunąć całą kartę?" OnClose="@OnDialogClose"></ConfirmationDialog>
+    }
+}
+@code{
+    [Inject]
+    public IMapper _mapper { get; set; }
+
+    [Parameter]
+    public EventCallback<SingleHourComponent> OnCardClick { get; set; }
+    
+    [Parameter]
+    public EventCallback<SingleHourComponent> OnRemoveCard { get; set; }
+
+    [Parameter]
+    public EventCallback OnNutritionSummaryChange { get; set; }
+
+    [Parameter]
+    public EventCallback OnEditSaveButtonClick { get; set; }
+
+    [Parameter]
+    public SingleEntryDto OryginalSingleEntry { get; set; }
+
+    private SingleEntryDto TemporarySingleEntry { get; set; }
+
+    [Parameter]
+    public int CardIndex { get; set; }
+
+    public Summary HourSummary { get; set; }
+    private Summary SingleMealSummary {get; set; }
+
+
+    //****FLAGS****
+    public bool Selected { get; set; } = false;
+    public bool EditModelEnabled { get; set; } = false;
+    private bool SaveButtonDisabled { get; set; } = true;
+    private bool EditButtonDisabled { get; set; } = false;
+    private bool CancelButtonDisabled { get; set; } = true;
+    private bool ShowCustomModalDialog { get; set; } = false;
+
+    private bool firstRender = true;
+
+    protected override void OnParametersSet()
+    {
+        if(firstRender)
+        {
+            firstRender = false;
+            Console.WriteLine("[OnParameterSet]");
+            CreateTemporarySingleEntry();
+            CalculateHourNutritionSummary();
+
+            Console.WriteLine($"[OnParameterSet] Card contains: {OryginalSingleEntry.Products.Count} products.");
+            base.OnParametersSet();
+        }
+    }
+
+    public void SetElementToDisplay(SingleEntryDto oryginalSingleEntry)
+    {
+        Console.WriteLine($"[SetElementToDisplay] Request to display hour: {oryginalSingleEntry.Hour}");
+        
+        OryginalSingleEntry = oryginalSingleEntry;
+        CreateTemporarySingleEntry();
+        CalculateHourNutritionSummary();
+        StateHasChanged();
+    }
+
+    private void CreateTemporarySingleEntry()
+    {
+        Console.WriteLine("[CreateTemporarySingleEntry] Creating deep copy of dto.");
+        TemporarySingleEntry = _mapper.Map<SingleEntryDto, SingleEntryDto>(OryginalSingleEntry);
+        Console.WriteLine($"[CreateTemporarySingleEntry] {TemporarySingleEntry.Hour}");
+    }
+
+    public void SelectCard()
+    {
+            Selected = true;
+    }
+
+    public void DeselectCard()
+    {
+        Selected = false;
+    }
+
+    private void OnProductWeightChange(ChangeEventArgs args, int index)
+    {
+        Console.WriteLine($"[OnProductWeightChange] {args.Value.ToString()}");
+        var weight = float.Parse(args.Value.ToString());
+
+        if(weight <= 1)
+        {
+            TemporarySingleEntry.Products.ElementAt(index).Weight = 1;
+        }
+        else if(weight >= 10000)
+        {
+            TemporarySingleEntry.Products.ElementAt(index).Weight = 10000;
+        }
+        else
+        {
+            TemporarySingleEntry.Products.ElementAt(index).Weight = int.Parse(args.Value.ToString());
+
+        }
+
+        CalculateHourNutritionSummary();
+        StateHasChanged();
+    }
+
+    private void OnMealWeightChange(ChangeEventArgs args, int index)
+    {
+        Console.WriteLine($"[OnMealWeightChange] {args.Value.ToString()}");
+        var weight = float.Parse(args.Value.ToString());
+
+        if(weight <= 1)
+        {
+            TemporarySingleEntry.Meals.ElementAt(index).Weight = 1;
+        }
+        else if(weight >= 10000)
+        {
+            TemporarySingleEntry.Meals.ElementAt(index).Weight = 10000;
+        }
+        else
+        {
+            TemporarySingleEntry.Meals.ElementAt(index).Weight = int.Parse(args.Value.ToString());
+
+        }
+
+        CalculateHourNutritionSummary();
+        StateHasChanged();
+    }
+
+    private void OnMealRemove(int index)
+    {
+        Console.WriteLine($"[OnRemoveMealButtonClick] Request to remove meal with index: {index}");
+        TemporarySingleEntry.Meals.RemoveAt(index);
+        CalculateHourNutritionSummary();
+        Console.WriteLine($"[OnRemoveMealButtonClick] Meal was removed.");
+    }
+
+    private void OnProductRemove(int index)
+    {
+        Console.WriteLine($"[OnRemoveProductButtonClick] Request to remove product with index: {index}");
+        TemporarySingleEntry.Products.RemoveAt(index);
+        CalculateHourNutritionSummary();
+        Console.WriteLine($"[OnRemoveProductButtonClick] Product was removed.");
+    }
+
+    private void OnEditButtonClick()
+    {
+        if(!EditButtonDisabled)
+        {
+            Console.WriteLine("[OnEditButtonClick]");
+            EditModelEnabled = true;
+            EditButtonDisabled = true;
+            SaveButtonDisabled = false;
+            CancelButtonDisabled = false;
+        }
+    }
+
+    private void OnCancelButtonClick()
+    {
+        if(!CancelButtonDisabled)
+        {
+            Console.WriteLine("[OnCancelButtonClick]");
+            EditModelEnabled = false;
+
+            EditButtonDisabled = false;
+            SaveButtonDisabled = true;
+            CancelButtonDisabled = true;
+
+            _mapper.Map<SingleEntryDto, SingleEntryDto>(OryginalSingleEntry, TemporarySingleEntry);
+
+            CalculateHourNutritionSummary();
+        }
+    }
+
+    private void OnSaveButtonClick()
+    {
+        if(!SaveButtonDisabled)
+        {
+            Console.WriteLine("[OnSaveButtonClick]");
+            EditModelEnabled = false;
+
+            EditButtonDisabled = false;
+            SaveButtonDisabled = true;
+            CancelButtonDisabled = true;
+
+            _mapper.Map<SingleEntryDto, SingleEntryDto>(TemporarySingleEntry, OryginalSingleEntry);
+
+            //Eventcallback
+            OnEditSaveButtonClick.InvokeAsync();
+        }
+    }
+
+    private void OnCardRemoveButtonClick()
+    {
+        Console.WriteLine("[OnRemoveButtonClick]");
+        ShowCustomModalDialog = true;
+        CalculateHourNutritionSummary();
+    }
+
+    private void OnDialogClose(bool result)
+    {
+        Console.WriteLine("[OnDialogClose]");
+        ShowCustomModalDialog = false;
+        if(result)
+        {
+            TemporarySingleEntry = null;
+            OnRemoveCard.InvokeAsync(this);
+        }
+    }
+
+    private void CardClicked()
+    {
+        OnCardClick.InvokeAsync(this);
+    }
+
+    private void OnHourChange(ChangeEventArgs e)
+    {
+        Console.WriteLine($"[OnHourChange] New time: {e.Value}");
+        if(DateTime.TryParse(e.Value.ToString(), out DateTime result))
+        {
+            TemporarySingleEntry.Hour = result.ToString("HH:mm");
+        }
+        else
+        {
+            Console.WriteLine("[OnHourChange] Problem with parsing time.");
+        }
+    }
+
+    public void AddProduct(SingleProductDto product)
+    {
+        Console.WriteLine($"[AddProduct]");
+        if(product is not null)
+        {
+            Console.WriteLine($"[AddProduct] Request to add product: {product.Product.Name}");
+            TemporarySingleEntry.Products.Add(product);
+            CalculateHourNutritionSummary();
+        }
+    }
+
+    public void AddMeal(SingleMealDto meal)
+    {
+        Console.WriteLine($"[AddMeal]");
+        if(meal is not null)
+        {
+            Console.WriteLine($"[AddMeal] Request to add meal: {meal.Meal.Name}");
+            TemporarySingleEntry.Meals.Add(meal);
+            CalculateHourNutritionSummary();
+        }
+    }
+
+    private Summary CalculateSingleMealNutritionSummary(SingleMealDto meal)
+    {
+        var summary = new Summary();
+        if(meal is not null && meal.Meal is not null) 
+        {
+            foreach(var item in meal.Meal.Ingredients)
+            {
+                summary.Kcal += ((item.Kcal * item.Weight) / 100);
+                summary.Protein += ((item.Protein * item.Weight) / 100);
+                summary.Carbohydrates += ((item.Carbohydrates * item.Weight) / 100);
+                summary.Fat += ((item.Fat * item.Weight) / 100);
+                summary.Roughage += ((item.Roughage * item.Weight) / 100);
+                summary.Weight += item.Weight;
+            }
+        }
+
+
+
+        return summary;
+    }
+
+    private void CalculateHourNutritionSummary()
+    {
+        if(TemporarySingleEntry is not null)
+        {
+            var pSummary = new Summary();
+            var mSummary = new Summary();
+
+            if(TemporarySingleEntry.Products is not null)
+            {
+                foreach(var item in TemporarySingleEntry.Products)
+                {
+                    var tempProd = new Summary();
+                    tempProd.Kcal += ((item.Product.Kcal * (float)item.Weight) / 100.0F);
+                    tempProd.Protein += ((item.Product.Protein * item.Weight) / 100);
+                    tempProd.Carbohydrates += ((item.Product.Carbohydrates * (float)item.Weight) / 100.0F);
+                    tempProd.Fat += ((item.Product.Fat * item.Weight) / 100);
+                    tempProd.Roughage += ((item.Product.Roughage * item.Weight) / 100);
+                    tempProd.Weight += item.Weight;
+
+                    Console.WriteLine($"[CalculateHourNutritionSummary] ProductsSummary {item.Product.Name}: {tempProd.Kcal} {tempProd.Protein} {tempProd.Carbohydrates} {tempProd.Fat} {tempProd.Roughage} {tempProd.Weight}");
+
+                    pSummary.Kcal += tempProd.Kcal;
+                    pSummary.Protein += tempProd.Protein;
+                    pSummary.Carbohydrates += tempProd.Carbohydrates;
+                    pSummary.Fat += tempProd.Fat;
+                    pSummary.Roughage += tempProd.Roughage;
+                    pSummary.Weight += tempProd.Weight;
+                }
+                Console.WriteLine($"[CalculateHourNutritionSummary] ProductsSummary: {pSummary.Kcal} {pSummary.Protein} {pSummary.Carbohydrates} {pSummary.Fat} {pSummary.Roughage} {pSummary.Weight} ");
+            }
+
+            if(TemporarySingleEntry.Meals is not null)
+            {
+                foreach(var item in TemporarySingleEntry.Meals)
+                {
+                    var tempMeal = new Summary();
+                    if(item is not null && item.Meal is not null && item.Meal.Ingredients is not null)
+                    {
+                        if(item.Meal.Ingredients is not null)
+                        {
+                            foreach(var ingredient in item.Meal.Ingredients)
+                            {
+                                tempMeal.Kcal += ((ingredient.Kcal * ingredient.Weight) / 100);
+                                tempMeal.Protein += ((ingredient.Protein * ingredient.Weight) / 100);
+                                tempMeal.Carbohydrates += ((ingredient.Carbohydrates * ingredient.Weight) / 100);
+                                tempMeal.Fat += ((ingredient.Fat * ingredient.Weight) / 100);
+                                tempMeal.Roughage += ((ingredient.Roughage * ingredient.Weight) / 100);
+                                tempMeal.Weight += ingredient.Weight;
+                            }
+
+                            tempMeal.Kcal = (tempMeal.Kcal * item.Weight) / tempMeal.Weight;
+                            tempMeal.Protein = (tempMeal.Protein * item.Weight) / tempMeal.Weight;
+                            tempMeal.Carbohydrates = (tempMeal.Carbohydrates * item.Weight) / tempMeal.Weight;
+                            tempMeal.Fat = (tempMeal.Fat * item.Weight) / tempMeal.Weight;
+                            tempMeal.Roughage = (tempMeal.Roughage * item.Weight) / tempMeal.Weight;
+                            tempMeal.Weight = item.Weight;
+                        }
+                    }
+
+                    mSummary.Kcal += tempMeal.Kcal;
+                    mSummary.Protein += tempMeal.Protein;
+                    mSummary.Carbohydrates += tempMeal.Carbohydrates;
+                    mSummary.Fat += tempMeal.Fat;
+                    mSummary.Roughage += tempMeal.Roughage;
+                    mSummary.Weight += tempMeal.Weight;
+                }
+                Console.WriteLine($"[CalculateHourNutritionSummary] MealSummary: {mSummary.Kcal} {mSummary.Protein} {mSummary.Carbohydrates} {mSummary.Fat} {mSummary.Roughage} {mSummary.Weight} ");
+            }
+            HourSummary = new Summary();
+            HourSummary.Kcal = pSummary.Kcal + mSummary.Kcal;
+            HourSummary.Protein = pSummary.Protein + mSummary.Protein;
+            HourSummary.Carbohydrates = pSummary.Carbohydrates + mSummary.Carbohydrates;
+            HourSummary.Fat = pSummary.Fat + mSummary.Fat;
+            HourSummary.Roughage = pSummary.Roughage + mSummary.Roughage;
+            HourSummary.Weight = pSummary.Weight + mSummary.Weight;
+
+            Console.WriteLine($"[CalculateHourNutritionSummary] Products + Meals: {HourSummary.Kcal} {HourSummary.Protein} {HourSummary.Carbohydrates} {HourSummary.Fat} {HourSummary.Roughage} {HourSummary.Weight} ");
+            OnNutritionSummaryChange.InvokeAsync();
+        }
+    }
+}
+
+
+

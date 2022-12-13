@@ -1,0 +1,50 @@
+@page 
+@using Microsoft.AspNetCore.Authentication
+@using NutritionWebClient.Dtos.User
+@using NutritionWebClient.SyncDataService.Login
+
+@attribute [IgnoreAntiforgeryToken]
+@inject ILoginDataClient _loginDataClient
+
+
+@functions
+{
+    public async Task<IActionResult> OnPost()
+    {
+        Console.WriteLine("[Logout:Post] Trying to logout the user.");
+        //var guid = Guid.NewGuid().ToString();
+        var claimUserId = HttpContext.User.Claims.First(c => c.Type == "userid");
+        var userId = int.Parse(claimUserId.Value);
+        var guid = Guid.NewGuid().ToString();
+
+        Console.WriteLine($"[Logout:Post] {userId}");
+
+        await _loginDataClient.UpdateUserSecurityStamp(new UpdateUserSecurityStampRequest() { UserId = userId, Guid = guid });
+        await HttpContext.SignOutAsync();
+
+        return LocalRedirect("/Identity/Account/Login/");
+    }
+
+    public async Task<IActionResult> OnGet()
+    {
+        Console.WriteLine("[Logout:Get] Trying to logout the user.");
+        //var guid = Guid.NewGuid().ToString();
+        var claimUserId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "userid");
+        if(claimUserId is null)
+        {
+            await HttpContext.SignOutAsync();
+            return LocalRedirect("/Identity/Account/Login/");
+        }
+        
+        var userId = int.Parse(claimUserId.Value);
+        var guid = Guid.NewGuid().ToString();
+
+        Console.WriteLine($"[Logout] {userId}");
+
+        await _loginDataClient.UpdateUserSecurityStamp(new UpdateUserSecurityStampRequest() { UserId = userId, Guid = guid });
+        await HttpContext.SignOutAsync();
+
+        return LocalRedirect("/Identity/Account/Login/");
+    }
+    
+}

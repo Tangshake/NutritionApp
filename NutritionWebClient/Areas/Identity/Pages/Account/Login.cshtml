@@ -1,0 +1,119 @@
+@page
+@model NutritionWebClient.Areas.Identity.Pages.Account.LoginPageModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="main-wrapper">
+    <div class="header">
+
+    </div>
+        <div class="login">
+            <div class="card" style="height:350px;">
+                <div class="card-header">
+                    <h3>Logowanie</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-page-handler="Login">
+                        @Html.AntiForgeryToken()
+                        <div class="input-group form-group" style="padding-bottom:0px; margin-bottom:0px;">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            </div>
+                            <input id="email" type="text" autocomplete="off" class="form-control" placeholder="Email" name="LoginModel.Email"></input>
+                        </div>
+                        <p class="card-text" style="padding-top: 0; margin-top: 0;">
+                            <ValidationMessage For="() => LoginModel.Email" />
+                        </p>
+                    
+                        <div class="input-group form-group" style="padding-bottom:0px; margin-bottom:0px;">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input id="password" type="password" class="form-control" placeholder="hasło" name="LoginModel.Password"></input>
+                        </div>
+                        <p class="card-text" style="padding-top: 0; margin-top: 0;">
+                            <ValidationMessage For="() => LoginModel.Password" />
+                        </p>
+
+                        <div class="input-group form-group" style="padding-bottom:0px; margin-bottom:0px;">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input id="password2" type="password" class="form-control" placeholder="hasło" name="LoginModel.RepeatedPassword"></input>
+                        </div>
+                        <p class="card-text" style="padding-top: 0; margin-top: 0;">
+                            <ValidationMessage For="() => LoginModel.RepeatedPassword" />
+                        </p>
+
+                        <div class="form-group">
+                            <input type="submit" value="Zaloguj"  class="btn float-right login_btn">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center">
+                        <a href="">Zapomniałeś hasła?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="fade-effect1"></div>
+
+    <div class="register" >
+        <div class="card" style="height:auto;">
+            <div class="card-header">
+                <h3>Rejestracja konta</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" asp-page-handler="Register">
+                    @Html.AntiForgeryToken()
+                    <div class="input-group form-group" style="padding-bottom:0px; margin-bottom:0px;">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        </div>
+                        <input id="name" type="text" autocomplete="off" class="form-control" placeholder="nazwa użytkownika" name="RegisterModel.Login"></input>
+                    </div>
+                    <p class="card-text" style="padding-top: 0; margin-top: 0;">
+                        <ValidationMessage For="() => RegisterModel.Login" />
+                    </p>
+
+                    <div class="input-group form-group" style="padding-bottom:0px; margin-bottom:0px;">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                        </div>
+                        <input id="email" type="text" autocomplete="off" class="form-control" placeholder="email" name="RegisterModel.Email"></input>
+                    </div>
+                    <p class="card-text" style="padding-top: 0; margin-top: 0;">
+                        <ValidationMessage For="() => RegisterModel.Email" />
+                    </p>
+
+                    <div class="input-group form-group" style="padding-bottom:0px; margin-bottom:0px;">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        </div>
+                        <input id="password" type="password" class="form-control" placeholder="hasło" name="RegisterModel.Password"></input>
+                    </div>
+                    <p class="card-text" style="padding-top: 0; margin-top: 0;">
+                        <ValidationMessage For="() => RegisterModel.Password" />
+                    </p>
+
+                    <div class="input-group form-group" style="padding-bottom:0px; margin-bottom:0px;">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        </div>
+                        <input id="password2" type="password" class="form-control" placeholder="hasło" name="RegisterModel.RepeatedPassword"></input>
+                    </div>
+                    <p class="card-text" style="padding-top: 0; margin-top: 0;">
+                        <ValidationMessage For="() => RegisterModel.RepeatedPassword" />
+                    </p>
+
+                    <div class="form-group">
+                        <input type="submit" value="Zarejestruj" class="btn float-right login_btn">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

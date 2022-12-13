@@ -1,0 +1,13 @@
+@page "/test"
+@using NutritionWebClient.Components.Redirection
+@inject NavigationManager _navigationManager
+
+<AuthorizeView>
+    <Authorized>
+        <p>You are auhorized to see this text.</p>
+    </Authorized>
+    <NotAuthorized>
+        <p>Not authorized</p>
+        <RedirectToLogin/>
+    </NotAuthorized>
+</AuthorizeView>

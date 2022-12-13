@@ -1,0 +1,140 @@
+.main-doe-wrapper {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    grid-template-rows: 40px 1fr 40px 1fr;
+    grid-gap: 10px;
+    grid-template-areas:
+        "prodsearch navigation"
+        "prodresult main"
+        "mealsearch main"
+        "mealresult main";
+    
+    height: 100%;
+}
+
+.products-search {
+    grid-area: prodsearch;
+}
+
+.products-result {
+    grid-area: prodresult;
+    background-color: rgba(255, 255, 255, 0.534);
+    overflow-y:auto;
+}
+
+.meals-search {
+    grid-area: mealsearch;
+}
+
+.meals-result {
+    grid-area: mealresult;
+    background-color: rgba(250, 248, 248, 0.514);
+    overflow-y:auto;
+}
+
+.doe-navigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    grid-area: navigation;
+    background-color: whitesmoke;
+    overflow: hidden;
+}
+
+
+.doe-main {
+    position: relative;
+    grid-area: main;
+    background-color: rgba(255, 255, 255, 0.534);
+    padding: 10px 10px 0 10px;
+    width: 100%;
+    overflow: auto;
+}
+
+.doe-by-hour {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    row-gap: 20px;
+    column-gap: 20px;
+    align-items: start;
+}
+
+.navigation-button button:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.navigation-button span {
+    font-size: 30px;
+    background-color: transparent;
+}
+
+.navigation-button button {
+    border: none;
+    margin: 0px;
+    padding: 0px;
+    background-color: transparent;
+}
+
+.navigation-button button:hover {
+    color: orangered;
+    font-weight: bold;
+}
+
+.doe-current-date input {
+    font-size: 20px;
+    border: none;
+}
+
+::-webkit-calendar-picker-indicator{
+    margin-left: -30px;
+}
+
+.navigation-button-left {
+    padding-right: 40px;
+    padding-left: 20px;
+}
+
+.navigation-button-right {
+    padding-left: 40px;
+    padding-right: 20px;
+}
+
+.add-new-card {
+    width: 50px;
+    height: 50px;
+    font-size: 30px;
+    margin-right: 20px;
+}
+
+.add-new-card button {
+    background-color: transparent;
+    padding: 0px;
+    border: none;
+    width: 50px;
+    height: 50px;
+}
+
+.add-new-card button:hover {
+    font-size: 35px;
+    color: blue;
+}
+
+.add-new-card button:focus {
+    outline: none;
+}
+
+.doe-nutrition-property {
+    display: flex;
+    font-size: 20px;
+    margin: 0px 8px 0px 8px;
+    border-radius: 0%;
+}
+
+.doe-nutrition-property span {
+    position: relative;
+    bottom: 0px;
+}

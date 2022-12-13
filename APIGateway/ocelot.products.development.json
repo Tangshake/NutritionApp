@@ -1,0 +1,74 @@
+{
+    "Routes": [
+        {
+            "DownStreamPathTemplate": "/api/products/by/id/{userId}/{id}",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "productsapi",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/api/products/by/id/{userId}/{id}",
+            "UpstreamHttpMethod:": ["GET"]
+        },
+
+        {
+            "DownStreamPathTemplate": "/api/products/by/name/{userId}/{name}",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "productsapi",
+                    "Port": 5001
+                }
+            ],
+
+            "UpstreamPathTemplate": "/api/products/by/name/{userId}/{name}",
+            "UpstreamHttpMethod:": ["GET"],
+            
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+
+        {
+            "DownStreamPathTemplate": "/api/products/{userId}/{id}",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "productsapi",
+                    "Port": 5001
+                }
+            ],
+            "UpstreamPathTemplate": "/api/products/{userId}/{id}",
+            "UpstreamHttpMethod:": ["DELETE", "PUT"],
+            
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
+            "UpstreamPathTemplate": "/api/products/{userId}",
+            "UpstreamHttpMethod:": ["POST", "GET"],
+
+            "DownStreamPathTemplate": "/api/products/{userId}",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "productsapi",
+                    "Port": 5001
+                }
+            ],
+            
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        }
+    ],
+    "GlobalConfiguration": {
+        "BaseUrl": "https://host.docker.internal:5081"
+    }
+}

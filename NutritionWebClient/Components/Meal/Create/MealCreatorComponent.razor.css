@@ -1,0 +1,99 @@
+.main-meal-wrapper {
+    display: grid;
+    grid-template-columns: 400px 250px 1fr;
+    grid-template-rows: 40px 80px 1fr;
+    grid-gap: 10px;
+    grid-template-areas:
+        "search product summary"
+        "result product summary"
+        "result product main";
+    
+    height: 100%;
+}
+
+.products-search {
+    grid-area: search;
+}
+
+.products-result {
+    grid-area: result;
+    background-color: rgba(255, 255, 255, 0.603);
+    overflow-y:auto;
+}
+
+.product-details {
+    margin: auto;
+    grid-area: product;
+    background-color: yellow;
+}
+
+.meal-summary {
+    grid-area: summary;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: 90%;
+    background-color: rgba(255, 255, 255, 0.527);
+}
+
+.meal-main {
+    grid-area: main;
+    background-color: rgba(253, 252, 252, 0.534);
+    padding: 0 20px 0 20px;
+    width: 90%;
+    overflow: auto;
+}
+
+.property {
+    margin: 0 10px 0 10px;
+    text-align: center;
+}
+
+.circle{
+    background: #FF7A59;
+    margin: auto;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 2px solid greenyellow;
+    text-align: center;
+    
+}
+
+.circle-text {
+    margin: 0px;
+    font-size: 1rem;
+}
+
+.circle-data {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+
+.meal-name {
+    font-family: 'Josefin Sans', sans-serif;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+.meal-name input {
+    padding: 0px;
+    outline: none;
+    border-width: 0 0 2px;
+    border-color: black;
+    background-color: cadetblue;
+}
+
+.meal-name label {
+    margin: 0px;
+    display: block;
+}

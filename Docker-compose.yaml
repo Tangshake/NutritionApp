@@ -1,0 +1,251 @@
+version: "3.9"
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    hostname: "rabbitmq"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - nutrition.dev
+
+  postgresql-server:
+    image: postgres:14.0
+    container_name: postgresqlserver
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    networks:
+      - nutrition.dev
+
+  mongodb-server:
+    image: mongo
+    container_name: mongodbserver
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodbdata:/data/db
+    networks:
+      - nutrition.dev
+
+  gateway:
+    hostname: APIGateway
+    build: APIGateway/
+    container_name: ocelotgateway
+    restart: unless-stopped
+    ports:
+      - "5081:5081"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "https://+:5081;http://+"
+      Kestrel__Certificates__Default__Password: ${Kestrel__Certificates__Default__Password}
+      Kestrel__Certificates__Default__Path: ${APIGateway_Cert}
+    volumes:
+      - ./Certs:/Certs
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - nutrition.dev
+
+  nutrition-webclient:
+    hostname: nutritionwebclient
+    container_name: webclient
+    build: NutritionWebClient/
+    restart: unless-stopped
+    environment:
+      OcelotGateway__Address: https://host.docker.internal
+      GrpcServices__Logs: "https://host.docker.internal:6051"
+      ASPNETCORE_URLS: "https://+;http://+"
+      ASPNETCORE_HTTPS_PORT: "5003"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      Kestrel__Certificates__Default__Password: ${Kestrel__Certificates__Default__Password}
+      Kestrel__Certificates__Default__Path: ${NutritionWebClient_Cert}
+    volumes:
+      - ./Certs:/Certs
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - nutrition.dev
+    depends_on:
+      - rabbitmq
+    profiles:
+      - donotstart
+
+  login-api:
+    container_name: loginapi
+    build: UserLogin/
+    restart: unless-stopped
+    environment:
+      KnownServices__JwtTokenService: https://jwtapi:5011/api/create
+      KnownServices__JwtTokenRefreshService: https://jwtapi:5011/api/refresh
+      RabbitMQ__HostName: host.docker.internal
+      RabbitMQ__Port: 5672
+      ASPNETCORE_URLS: "https://+:5005;http://+"
+      ASPNETCORE_HTTPS_PORT: "5005"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      Kestrel__Certificates__Default__Password: ${Kestrel__Certificates__Default__Password}
+      Kestrel__Certificates__Default__Path: ${UserLogin_Cert}
+    volumes:
+      - ./Certs:/Certs
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - nutrition.dev
+    depends_on:
+      - rabbitmq
+
+  jwt-api:
+    container_name: jwtapi
+    build: JWTService/
+    restart: unless-stopped
+    environment:
+      RabbitMQ__HostName: host.docker.internal
+      RabbitMQ__Port: 5672
+      ASPNETCORE_URLS: "https://+:5011;http://+"
+      ASPNETCORE_HTTPS_PORT: "5011"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      Kestrel__Certificates__Default__Password: ${Kestrel__Certificates__Default__Password}
+      Kestrel__Certificates__Default__Path: ${Jwt_Cert}
+    volumes:
+      - ./Certs:/Certs
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - nutrition.dev
+    depends_on:
+      - rabbitmq
+
+  register-api:
+    container_name: registerapi
+    build: UserRegister/
+    restart: unless-stopped
+    ports:
+      - "25:25"
+    environment:
+      Email__Server: "host.docker.internal"
+      Email__Port: "25"
+      ConnectionStrings__Users: "Server=host.docker.internal;Port=5433;Database=users;UserId=postgres;Password=postgres"
+      ASPNETCORE_URLS: "https://+:5007;http://+"
+      ASPNETCORE_HTTPS_PORT: "5007"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      Kestrel__Certificates__Default__Password: ${Kestrel__Certificates__Default__Password}
+      Kestrel__Certificates__Default__Path: ${Register_Cert}
+    volumes:
+      - ./Certs:/Certs
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - nutrition.dev
+    depends_on:
+      - rabbitmq
+
+  products-api:
+    hostname: ProductsCatalog
+    container_name: productsapi
+    build: ProductsCatalog/
+    environment:
+      ConnectionStrings__ProductConnection: "Server=host.docker.internal;Port=5433;Database=nutrition;UserId=postgres;Password=postgres"
+      Kestrel__Endpoints__gRPC__Url: https://host.docker.internal:6001
+      Kestrel__Endpoints__WebApi__Url: https://host.docker.internal:5001
+      RabbitMQ__HostName: host.docker.internal
+      RabbitMQ__Port: 5672
+      ASPNETCORE_HTTPS_PORT: "5001"
+      ASPNETCORE_URLS: ""
+      ASPNETCORE_ENVIRONMENT: "Development"
+      Kestrel__Certificates__Default__Password: ${Kestrel__Certificates__Default__Password}
+      Kestrel__Certificates__Default__Path: ${Products_Cert}
+    volumes:
+      - ./Certs:/Certs
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - nutrition.dev
+    depends_on:
+      - rabbitmq
+
+  meals-api:
+    container_name: mealsapi
+    build: PredefinedMeals/
+    restart: unless-stopped
+    environment:
+      ConnectionStrings__MongoDbConnection: "mongodb://host.docker.internal:27017"
+      Kestrel__Endpoints__gRPC__Url: https://host.docker.internal:6021
+      Kestrel__Endpoints__WebApi__Url: https://host.docker.internal:5021
+      RabbitMQ__HostName: host.docker.internal
+      RabbitMQ__Port: 5672
+      ASPNETCORE_URLS: "https://+:5021;http://+"
+      ASPNETCORE_HTTPS_PORT: "5021"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      Kestrel__Certificates__Default__Password: ${Kestrel__Certificates__Default__Password}
+      Kestrel__Certificates__Default__Path: ${Meals_Cert}
+    volumes:
+      - ./Certs:/Certs
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - nutrition.dev
+    depends_on:
+      - rabbitmq
+
+  myday-api:
+    container_name: mydayapi
+    build: MyDayService/
+    restart: unless-stopped
+    environment:
+      GrpcProducts: "https://productsapi:6001"
+      GrpcMeals: "https://mealsapi:6021"
+      RabbitMQ__HostName: host.docker.internal
+      RabbitMQ__Port: 5672
+      ASPNETCORE_URLS: "https://+:5031;http://+"
+      ASPNETCORE_HTTPS_PORT: "5031"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      Kestrel__Certificates__Default__Password: ${Kestrel__Certificates__Default__Password}
+      Kestrel__Certificates__Default__Path: ${MyDay_Cert}
+    volumes:
+      - ./Certs:/Certs
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - nutrition.dev
+    depends_on:
+      - rabbitmq
+
+  log-api:
+    container_name: logapi
+    build: LogService/
+    restart: unless-stopped
+    ports:
+      - "6051:6051"
+      - "6041:6041"
+    environment:
+      ConnectionStrings__Logs: "Server=host.docker.internal;Port=5433;Database=logs;UserId=postgres;Password=postgres;"
+      Kestrel__Endpoints__gRPC__Url: https://host.docker.internal:6051
+      Kestrel__Endpoints__WebApi__Url: https://host.docker.internal:6041
+      ASPNETCORE_URLS: "https://+;http://+"
+      ASPNETCORE_HTTPS_PORT: "6041"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      Kestrel__Certificates__Default__Password: ${Kestrel__Certificates__Default__Password}
+      Kestrel__Certificates__Default__Path: ${Logs_Cert}
+    volumes:
+      - ./Certs:/Certs
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - nutrition.dev
+    depends_on:
+      - rabbitmq
+
+networks:
+  nutrition.dev:
+
+volumes:
+  postgresdata:
+    external: true
+    name:
+      postgeresdata
+  mongodbdata:
+    external: true
+    name:
+      mongodbdata
+
+

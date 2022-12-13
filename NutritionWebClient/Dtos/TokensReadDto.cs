@@ -1,0 +1,12 @@
+using System;
+
+namespace NutritionWebClient
+{
+    public class TokensReadDto
+    {
+        public int UserId { get; set; }
+        public string SecurityStamp  {get; set; }
+        public string JwtToken { get; set; }
+        public string RefreshToken { get; set; }
+    }
+}

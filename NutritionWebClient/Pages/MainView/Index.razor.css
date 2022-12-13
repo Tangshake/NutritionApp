@@ -1,0 +1,29 @@
+.main-wrapper {
+    height: calc(100vh - 20px);
+    display: grid;
+    grid-template-columns: 400px 1fr 1fr;
+    grid-template-rows: 100px 1fr 100px;
+    grid-gap: 10px;
+    grid-template-areas:
+        "header header header"
+        "main main main"
+        "footer footer footer"
+}
+
+.header {
+    grid-area: header;
+    background-color: rgba(216, 252, 216, 0.699);
+}
+
+.main {
+    grid-area: main;
+    /* background-color: cadetblue; */
+    overflow-y: scroll;
+    padding-left: 20px;
+    overflow: auto;
+}
+
+.footer {
+    grid-area: footer;
+    /* background-color: darkgoldenrod; */
+}

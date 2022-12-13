@@ -1,0 +1,55 @@
+@page "/register"
+
+@using Dtos
+@using Microsoft.AspNetCore.WebUtilities
+@using NutritionWebClient.SyncDataService.Login
+
+@inject ILoginDataClient _loginDataClient
+@inject NavigationManager navigationManager
+
+@code {
+    public string userId { get; set; }
+    public string token { get; set; }
+
+    private static bool initialized = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Blazor OnInitialized{Async} is called twice by design (pre-render). After connection is established with the server SignalR method is called second time.
+        if(initialized)
+        {
+            initialized = false;
+            var uri = navigationManager.ToAbsoluteUri(navigationManager.Uri);
+            Console.WriteLine($"--> [{DateTime.Now.ToString("hh.mm.ss.ffffff")} EmailVerification:Start] received URI: {uri}");
+
+            var emailVerificationDto = new EmailVerificationDto();
+
+            if(QueryHelpers.ParseQuery(uri.Query).TryGetValue("userId", out var userIdValues))
+            {
+                emailVerificationDto.UserId = int.Parse(userIdValues.First());
+            }
+
+            if(QueryHelpers.ParseQuery(uri.Query).TryGetValue("token", out var tokenValues))
+            {
+                emailVerificationDto.Token = tokenValues.First();
+            }
+           
+            await VerifyEmail(emailVerificationDto);
+            Console.WriteLine($"--> [EmailVerification:End]");
+        }
+    }
+
+    private async Task VerifyEmail(EmailVerificationDto emailVerificationDto)
+    {
+        if(emailVerificationDto != null && !emailVerificationDto.Token.Equals(string.Empty) && emailVerificationDto.UserId > 0)
+        {
+            Console.WriteLine($"---> [WebClient:Send] Register user data sent to register webservice.");
+            var registerResponseDto = await _loginDataClient.SendEmailVerificationData(emailVerificationDto);
+            Console.WriteLine($"---> [WebClient:Response] Received message: {registerResponseDto.Message}");
+        }
+        else
+        {
+            Console.WriteLine($"--> [WebClient] Registering went wrong.");
+        }
+    }
+}

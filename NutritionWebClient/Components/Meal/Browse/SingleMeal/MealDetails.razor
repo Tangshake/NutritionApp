@@ -1,0 +1,122 @@
+@using NutritionWebClient.Components.ConfirmationDialog
+
+<div class="meal-main">
+    <div class="meal-summary">
+        @if(editEnable && TemporaryMeal is not null && TemporaryMeal.Ingredients is not null)
+        {
+            <div class="property">
+                <p class="circle-text">nowa nazwa:</p>
+                <div class="rectangle">
+                    <input type="text" @bind-value="TemporaryMeal.Name"/>
+                </div>
+            </div>
+        }
+        else if(!editEnable && TemporaryMeal is not null)
+        {
+            <div class="property">
+                <p class="circle-text">nazwa:</p>
+                <div class="rectangle"><p class="circle-data">@TemporaryMeal.Name</p></div>
+            </div>
+        }
+        <div class="property">
+            <p class="circle-text">waga:</p>
+            <div class="circle"><p class="circle-data">@Summary.Weight.ToString("N1")</p></div>
+        </div>
+        <div class="property">
+            <p class="circle-text">kcal</p>
+            <div class="circle"><p class="circle-data">@Summary.Kcal.ToString("N1")</p></div>
+        </div>
+        <div class="property">
+            <p class="circle-text">białko</p>
+            <div class="circle"><p class="circle-data">@Summary.Protein.ToString("N1")</p></div>
+        </div>
+        <div class="property">
+            <p class="circle-text">węglowodany</p>
+            <div class="circle"><p class="circle-data">@Summary.Carbohydrates.ToString("N1")</p>
+            </div>
+        </div>
+        <div class="property">
+            <p class="circle-text">tłuszcz</p>
+            <div class="circle"><p class="circle-data">@Summary.Fat.ToString("N1")</p></div>
+        </div>
+        <div class="property">
+            <p class="circle-text">błonnik</p>
+            <div class="circle"><p class="circle-data">@Summary.Roughage.ToString("N1")</p></div>
+        </div>
+        @if(ShowEditButton && TemporaryMeal is not null && TemporaryMeal.Ingredients is not null)
+        {
+            <div class="property-button">
+                <div class="meal-edit">
+                    <button id="edit-button" class="edit-button btn btn-light btn-sm btn-block"  @onclick="OnEditButtonClick">
+                        <span class="bi-pencil"></span>
+                        @EditButtonRoleText
+                    </button>
+                </div>
+
+                <div class="meal-save">
+                    <button  id="save-button" class="save-button btn btn-light btn-sm btn-block @SaveDisabled" @onclick="OnSaveUpdatedPredefinedMeal">
+                        <span class="bi-save"></span>
+                        Zapisz
+                    </button>
+                </div>
+                <div class="meal-remove">
+                    <button id="remove-button" class="save-button btn btn-light btn-sm btn-block" @onclick="OnRemovePredefinedMeal">
+                        <span class="bi-trash"></span>
+                        Usuń
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="meal-details">
+        @if(TemporaryMeal is not null && TemporaryMeal.Ingredients is not null && TemporaryMeal.Ingredients.Count > 0)
+        {
+            <table class="table table-stripped table-dark table-sm">
+                <thead>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Producent</th>
+                    <th>kcal</th>
+                    <th>Białko</th>
+                    <th>Węglowodany</th>
+                    <th>Tłuszcz</th>
+                    <th>Błonnik</th>
+                    <th>Waga</th>
+                </thead>
+                <tbody>
+                    @{ var index = 0; }
+                    @foreach (var product in TemporaryMeal.Ingredients)
+                    {
+                        int localIndex = index;
+                        <tr>
+                            <td>@product.Id</td>
+                            <td>@product.Name</td>
+                            <td>@product.Manufacturer</td>
+                            <td>@(((product.Kcal * product.Weight) / 100).ToString("N1")) </td>
+                            <td>@(((product.Protein * product.Weight) / 100).ToString("N1"))</td>
+                            <td>@(((product.Carbohydrates * product.Weight) / 100).ToString("N1"))</td>
+                            <td>@(((product.Fat * product.Weight) / 100).ToString("N1"))</td>
+                            <td>@(((product.Roughage * product.Weight) / 100).ToString("N1"))</td>
+                            @if(editEnable)
+                            {
+                                <td><input @onchange="@((ChangeEventArgs args) => OnWeightChange(args, localIndex))" type="number" min="1" max="10000" value="@product.Weight"/></td>
+                                <td><button @onclick="@(e => OnProductRemoveEvent(localIndex))"><span class="bi-trash"></span></button></td>
+                            }
+                            else
+                            {
+                                <td>@product.Weight.ToString("N1")</td>
+                            }
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@if (ShowCustomModalDialog)
+{
+    <ConfirmationDialog DialogType="ConfirmationDialog.ModalDialogType.DeleteCancel" Title="Uwaga!" Text="Czy na pewno chcesz usunąć posiłek?" Details=@CustomDialogDetails OnClose="OnDialogClose"></ConfirmationDialog>
+}

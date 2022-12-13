@@ -1,0 +1,51 @@
+<div class="main-create-product">
+    <div class="product-card">
+        <div class="card shadow-sm p-3 mb-5 bg-white rounded" style="width: 22rem;">
+            <div class="card-header">
+                
+                @if(ShowSavingSpinner)
+                {
+                    <div class = "spinner" style = "font-size: 8px">
+                        <div class = "head"></div>
+                    </div>
+                }
+                else
+                {
+                    <i class="bi bi-egg-fried" style="font-size: 3rem; color: black;"></i>
+                }
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <label for="name">Nazwa</label>
+                    <input type="text" autocomplete="off" @bind-value="@Product.Name" name="name"/>
+                </li>
+                <li class="list-group-item">
+                    <label for="name">Producent</label>
+                    <input type="text" autocomplete="off" @bind-value="@Product.Manufacturer" name="manufacturer"/>
+                </li>
+                <li class="list-group-item">
+                    <label for="kcal">kcal</label>
+                    <input type="number" min="0" @bind-value="@Product.Kcal" name="kcal"/>
+                </li>
+                <li class="list-group-item">
+                    <label for="protein">Białko [g]</label>
+                    <input type="number" step="0.1" min="0" @bind-value="@Product.Protein" name="proteint"/>
+                    </li>
+                <li class="list-group-item">
+                    <label for="carbohydrates">Węglowodany [g]</label>
+                    <input type="number" step="0.1" min="0" @bind-value="@Product.Carbohydrates" name="carbohydrates"/>
+                    </li>
+                <li class="list-group-item">
+                    <label for="fat">Tłuszcz [g]</label>
+                    <input type="number" step="0.1" min="0" @bind-value="@Product.Fat" name="fat"/>
+                    </li>
+                <li class="list-group-item">
+                    <label for="kcal">Błonnik [g]</label>
+                    <input type="number" step="0.1" min="0" @bind-value="@Product.Roughage" name="roughage"/>
+                    </li>
+                <li class="list-group-item">Waga: 100g</li>
+                <li class="list-group-item"><input type="submit" class="btn btn-primary" value="Zapisz" @onclick="@SaveProduct"/></li>
+            </ul>
+        </div>
+    </div>
+</div>

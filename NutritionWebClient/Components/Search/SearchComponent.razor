@@ -1,0 +1,61 @@
+@using Microsoft.AspNetCore.Components.Web
+
+<div class="search-container">
+    <input class="search-box" @ref="searchRef" type="text" placeholder=@SearchPlaceholder  @bind-value="SearchValue" @bind-value:event="oninput" @onkeyup="OnKeyUp" />
+    @if(ShowSearchAllButton)
+    {
+     <button class="search-button" @onclick="OnClick">All</button>
+    }
+</div>
+
+@code{
+    private ElementReference searchRef;
+    
+    [Parameter]
+    public EventCallback<string> OnSearch { get; set; }
+    
+    [Parameter]
+    public EventCallback OnSearchAll { get; set; }
+
+    [Parameter]
+    public string SearchPlaceholder { get; set; }
+
+    [Parameter]
+    public bool ShowSearchAllButton { get; set; }
+
+    string SearchValue { get; set; }
+
+        protected override void OnParametersSet()
+        {
+            Console.WriteLine($"[SearchComponent: OnParametersSet] Placeholder text: {SearchPlaceholder}");
+            if(string.IsNullOrEmpty(SearchPlaceholder))
+                SearchPlaceholder = "Wyszukaj posiłek";
+                
+            base.OnParametersSet();
+        }
+
+        //Set focus on start
+    
+    
+    //Set focus on start
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await searchRef.FocusAsync();
+    }
+
+    public void OnKeyUp(KeyboardEventArgs e)
+    {
+        if (SearchValue != null)
+        {
+            //Console.WriteLine($"SearchString: {SearchValue}");
+            OnSearch.InvokeAsync(SearchValue);
+        }
+    }
+
+    public void OnClick()
+    {
+        OnSearchAll.InvokeAsync();
+    }
+}
+

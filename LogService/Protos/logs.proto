@@ -1,0 +1,27 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "LogService";
+
+service GrpcLogs {
+    rpc GetLogsByDateAndUserId (GrpcRequestLogDto) returns (GrpcResponseLogsDto);
+}
+
+message GrpcRequestLogDto {
+    int32 userId = 1;
+    google.protobuf.Timestamp date = 2;
+}
+
+message GrpcResponseLogsDto {
+    repeated LogModel Logs = 1;
+}
+
+message LogModel {
+    int32 id = 1;
+    int32 userId = 2;
+    google.protobuf.Timestamp date = 3;
+    string serviceName = 4;
+    string method = 5;
+    string message = 6;
+    string error = 7;
+}

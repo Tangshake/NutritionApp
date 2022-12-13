@@ -1,0 +1,24 @@
+.card-body{
+    text-align: center;
+    background-color: lightgreen;
+    padding: 5px;
+}
+
+.card-title{
+    font-size: 1.2rem;
+    margin: 0px;
+}
+
+.card-head {
+    text-align: center;
+}
+
+table {
+    background-color: white; 
+    margin-top: 10px;
+}
+table tr td{
+    font-size: 0.8em;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}

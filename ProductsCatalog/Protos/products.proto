@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option csharp_namespace = "ProductsCatalog";
+
+service GrpcProducts {
+    rpc GetAllProducts (GrpcRequestProductsModel) returns (GrpcResponseProductModel);
+}
+
+message GrpcRequestProductsModel {
+    repeated ProductId ids = 1;
+}
+
+message ProductId {
+    int32 productId = 1;
+}
+
+message ProductModel {
+    int32 Id = 1;
+    string Name = 2;
+    string Manufacturer = 3;
+    int32 Kcal = 4;
+    float Protein = 5;
+    float Fat = 6;
+    float Carbohydrates = 7;
+    float Roughage = 8;
+}
+
+message GrpcResponseProductModel {
+    repeated ProductModel products = 1;
+}
+
+message GrpcTestResponse {
+    string name = 1;
+}
+
+message GrpcTestRequest {}

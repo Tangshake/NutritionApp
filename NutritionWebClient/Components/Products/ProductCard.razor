@@ -1,0 +1,88 @@
+@typeparam TItem
+@using System.Reflection
+
+  @if(Item is not null && memberInfo is not null && memberInfo.Length > 0)
+  {
+    <div class="card" style="width: 12rem;">
+      <div class="card-head">
+        <div class="card-body">
+          <h5 class="card-title">@Item.GetType().GetProperty("Name").GetValue(Item, null)</h5>
+          <div style="font-size: 0.8rem">100g</div>
+        </div>
+      </div>
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th></th>
+              <th colspan="2"  style="text-align: right;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var member in memberInfo)
+            {
+              @if(member.MemberType == MemberTypes.Property && !ColumnsToExclude.Contains(member.Name, StringComparison.OrdinalIgnoreCase))
+              {
+                  <tr>
+                    <td>
+                        @if(!string.IsNullOrEmpty(GetPolishName(member.Name)))
+                          @GetPolishName(member.Name)
+                        else
+                          @member.Name
+
+                    </td>
+                    <td style="text-align: right;">
+                      @Item.GetType().GetProperty(member.Name).GetValue(Item)
+                    </td>
+                    <td>
+                      @if(!member.Name.Equals("Manufacturer"))
+                      {
+                        <text>g</text>
+                      }
+                    </td>
+                  </tr>
+              }
+            }
+          </tbody>
+        </table>
+    </div>
+  }
+
+
+@code{
+  [Parameter]
+  public TItem Item {get; set;}
+  
+  [Parameter]
+  public string ColumnsToExclude { get; set; }
+
+  private List<TItem> product;
+
+  MemberInfo[] memberInfo;
+
+  protected override void OnParametersSet()
+  {
+      base.OnParametersSet();
+
+      if(Item != null)
+      {
+        product = new List<TItem> { Item };
+
+        Type typeOfItem = this.Item.GetType();
+        memberInfo = typeOfItem.GetMembers();
+      }
+  }
+
+  private string GetPolishName(string text)
+  {
+    switch(text)
+    {
+      case "Fat" : return "Tłuszcze";
+      case "Roughage" : return "Błonnik";
+      case "Carbohydrates" : return "Węglowodany";
+      case "Protein" : return "Białko";
+      case "Kcal" : return "Kcal";
+      case "Manufacturer" : return "Producent";
+    }
+    return "";
+  }
+}

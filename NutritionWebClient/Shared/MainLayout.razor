@@ -1,0 +1,20 @@
+@using Microsoft.AspNetCore.Authorization
+@inherits LayoutComponentBase
+@attribute [AllowAnonymous]
+
+<style>
+    body {
+        background-image: url(/images/Background.jpg);
+        @* background-image: url(/images/BackgroundLogin.jpg); 
+        *@
+        /* Center and scale the image nicely */
+        background-position: center center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+
+<div class="top-level-container">
+    @Body
+</div>

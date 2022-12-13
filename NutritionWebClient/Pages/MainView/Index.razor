@@ -1,0 +1,48 @@
+@page "/"
+
+@using static Model.Views
+@using NutritionWebClient.Components.Doe
+@using NutritionWebClient.Components.InformationDialog
+@using NutritionWebClient.Components.Logs
+@using NutritionWebClient.Components.Meal.Browse
+@using NutritionWebClient.Components.Meal.Create
+@using NutritionWebClient.Components.Navigation
+@using NutritionWebClient.Components.Products
+@using NutritionWebClient.Components.Products.Create
+@using NutritionWebClient.Components.Redirection
+@using TokenStorageService
+@using NutritionWebClient.SyncDataService.Products
+@using NutritionWebClient.SyncDataService.Login
+
+@inject ITokenStorage _tokenStorage
+@inject IProductDataClient _productDataClient
+@inject ILoginDataClient _loginDataClient
+
+<AuthorizeView>
+    <Authorized>
+        <div class="main-wrapper">
+            <div class="header">
+                <ToplinksComponent UserEmail="@UserEmail" OnLinkClicked="OnViewChangeRequest"></ToplinksComponent>
+            </div>
+            <div class="main">
+                @switch(ShowView)
+                {
+                    case ViewToShow.MealCreator: <MealCreatorComponent UserId="@UserId"></MealCreatorComponent> break;
+                    case ViewToShow.MealBrowser: <MealBrowserComponent UserId="@UserId"></MealBrowserComponent> break;
+                    case ViewToShow.Personal: <DoeComponent UserId="@UserId"></DoeComponent> break;
+                    case ViewToShow.ProductBrowser: <ProductsComponent UserId="@UserId"></ProductsComponent> break;
+                    case ViewToShow.ProductCreator: <ProductCreatorComponent UserId="@UserId"></ProductCreatorComponent> break;
+                    case ViewToShow.LogViewer: <LogViewer></LogViewer> break;
+                    case ViewToShow.NoView: break;
+                }
+            </div>
+            <div class="footer">
+                <InformationDialog></InformationDialog>
+            </div>
+        </div>
+        
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogout></RedirectToLogout>
+    </NotAuthorized>
+</AuthorizeView>

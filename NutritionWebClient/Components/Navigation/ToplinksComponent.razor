@@ -1,0 +1,61 @@
+@using static Model.Views
+
+<div class="main-toplinks-wrapper">
+    <AuthorizeView Context="LinksContext" Roles="regular, Administrator">
+    <div class="myday">
+        <input type="image" src="/images/NutritionIcons/Navigation/myday.png" @onclick="@(() => NavClicked(@ViewToShow.Personal))"></input>
+        <div>Mój dzień</div>
+    </div>
+    <div class="products-search">
+        <input type="image" src="/images/NutritionIcons/Navigation/products-search.png" @onclick="@(() => NavClicked(@ViewToShow.ProductBrowser))">Przeglądaj produkty</input>
+        <div>Przeglądaj produkty</div>
+    </div>
+    <div class="products-add">
+        <input type="image" src="/images/NutritionIcons/Navigation/products-add.png" @onclick="@(() => NavClicked(@ViewToShow.ProductCreator))"></input>
+        <div>Dodaj produkt</div>
+    </div>
+    <div class="meals-search">
+        <input type="image" src="/images/NutritionIcons/Navigation/meal-search.png" @onclick="@(() => NavClicked(@ViewToShow.MealBrowser))"></input>
+        <div>Przeglądaj posiłki</div>
+    </div>
+    <div class="meals-add">
+        <input type="image" src="/images/NutritionIcons/Navigation/meal-add.png" @onclick="@(() => NavClicked(@ViewToShow.MealCreator))"></input>
+        <div>Dodaj posiłek</div>
+    </div>
+    <AuthorizeView Roles="Administrator">
+        <div class="logs">
+            <input type="image" src="/images/NutritionIcons/Navigation/log.png" @onclick="@(() => NavClicked(@ViewToShow.LogViewer))"></input>
+            <div>Logi</div>
+        </div>
+    </AuthorizeView>
+
+    </AuthorizeView>
+    <div class="logout">
+        <div class="logout-user-icon">
+            <img src="/images/NutritionIcons/Navigation/user.png">
+            <span>Witaj: @UserEmail</span>
+        </div>
+        
+        <form method="post" action="/Identity/Account/Logout">
+            <div class="logout-button">
+                <button type="submit" value="Wyloguj"><img src="/images/NutritionIcons/Navigation/logout.png">Wyloguj</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@code
+{
+    [Parameter]
+    public EventCallback<ViewToShow> OnLinkClicked { get; set; }
+
+    [Parameter]
+    public string UserEmail { get; set; }
+
+    public void NavClicked(ViewToShow viewName)
+    {
+        Console.WriteLine($"--> [NavMenu] Item clicked: {viewName}");
+        OnLinkClicked.InvokeAsync(viewName);
+    }
+
+}

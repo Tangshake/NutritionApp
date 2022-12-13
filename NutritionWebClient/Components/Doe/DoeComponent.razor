@@ -1,0 +1,96 @@
+@using Dtos.Doe.Response
+@using NutritionWebClient.Components.Doe.SingleHour
+@using NutritionWebClient.Components.Products
+@using NutritionWebClient.Components.Search
+
+<div class="main-doe-wrapper">
+    <div class="products-search">
+        <SearchComponent OnSearch="OnProductSearchStringChange" SearchPlaceholder="Wyszukaj produkt" ShowSearchAllButton="false"></SearchComponent>
+    </div>
+    <div class="products-result">
+        <AutoGridComponent Items="@products" CssClass="table-striped table-hover" ColumnsNames="@(new string[] {"Nazwa","Producent"})" ColumnsToExclude="id,kcal,protein,fat,carbohydrates,roughage,weight" OnProductSelected="ProductSelectedEvent"></AutoGridComponent>
+    </div>
+    <div class="meals-search">
+        <SearchComponent  OnSearchAll="OnSearchAllEvent" OnSearch="OnMealSearchStringChange"  SearchPlaceholder="Wyszukaj posiłek" ShowSearchAllButton="true"></SearchComponent>
+    </div>
+    <div class="meals-result">
+        <AutoGridComponent Items="@meals" CssClass="table-striped table-hover" ColumnsNames="@(new string[] {"Nazwa"})" ColumnsToExclude="id,Ingredients, UserId" OnProductSelected="MealSelectedEvent"></AutoGridComponent>
+    </div>
+    <div class="doe-navigation">
+        <div class="navigation-button navigation-button-left">
+            <button type="button" @onclick="OnPreviousDayButtonClick"><span class="bi bi-arrow-left-circle"></span></button>
+        </div>
+        <div class="doe-current-date">
+            @* <span>@CurrentDisplayedDoeDate.ToString("yyyy-MM-dd")</span> *@
+            <input type="date" @onchange="@((ChangeEventArgs args) => OnDoeDateChange(args))" value="@CurrentDisplayedDoeDate.ToString("yyyy-MM-dd")">
+        </div>
+        <div class="navigation-button navigation-button-right">
+            <button type="button" @onclick="OnNextDayButtonClick"><span class="bi bi-arrow-right-circle"></span></button>
+        </div>
+        <div class="add-new-card">
+            <button @onclick="@OnAddNewCardButtonClick"><i class="bi bi-plus-square-dotted"></i></button>
+        </div>
+        @if(DaySummary is not null)
+        {
+            <div class="doe-nutrition-property">
+                <img src="/images/NutritionIcons/weight.png" width="24px" />
+                <span>@DaySummary.Weight.ToString("N1")</span>
+            </div>
+
+            <img src="/images/NutritionIcons/star.png" width="8px" />
+
+            <div class="doe-nutrition-property">
+                <img src="/images/NutritionIcons/calories.png" width="24px" />
+                @DaySummary.Kcal.ToString("N1")
+            </div>
+            
+            <img src="/images/NutritionIcons/star.png" width="8px" />
+
+            <div class="doe-nutrition-property">
+                <img src="/images/NutritionIcons/protein.png" width="24px" />
+                @DaySummary.Protein.ToString("N1")
+            </div>
+
+            <img src="/images/NutritionIcons/star.png" width="8px" />
+
+            <div class="doe-nutrition-property">
+                <img src="/images/NutritionIcons/carbohydrates.png" width="24px" />
+                @DaySummary.Carbohydrates.ToString("N1")
+            </div>
+
+            <img src="/images/NutritionIcons/star.png" width="8px" />
+
+            <div class="doe-nutrition-property">
+                <img src="/images/NutritionIcons/fat.png" width="24px" />
+                @DaySummary.Fat.ToString("N1")
+            </div>
+
+            <img src="/images/NutritionIcons/star.png" width="8px" />
+
+            <div class="doe-nutrition-property">
+                <img src="/images/NutritionIcons/vegetable.png" width="24px" />
+                @DaySummary.Roughage.ToString("N1")
+            </div>
+        }
+    </div>
+    <div class="doe-main">
+
+        @if(doeResponseDto is not null && doeResponseDto.Does is not null)
+        {
+            <div class="doe-by-hour">
+                @for(int i=0; i < doeResponseDto.Does.Count; i++)
+                {
+                    <SingleHourComponent
+                        @key=@doeResponseDto.Does.ElementAt(i)
+                        OryginalSingleEntry="@doeResponseDto.Does.ElementAt(i)"
+                        OnEditSaveButtonClick="@OnEditSaveButtonClickEvent" 
+                        OnNutritionSummaryChange="OnNutritionSummaryChangeEvent"
+                        OnCardClick="@OnCardClickEvent" 
+                        OnRemoveCard="@OnRemoveCardEvent" 
+                        @ref="@Ref"></SingleHourComponent>
+                }
+            </div>
+        }
+    </div>
+</div>
+

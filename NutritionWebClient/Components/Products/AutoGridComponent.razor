@@ -1,0 +1,92 @@
+@using System.Reflection
+@typeparam TItem
+
+@* We only render the table if we got info about our type *@
+@if(memberInfo != null && memberInfo.Length > 0)
+{
+    <table class="@($"table {CssClass}")">
+        <thead>
+            <tr>
+                @{int i = 0;}
+                @foreach(var member in memberInfo)
+                {
+                    @if(member.MemberType == MemberTypes.Property && !ColumnsToExclude.Contains(member.Name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <th>
+                            @if(ColumnsNames != null && ColumnsNames.Length > 0 && ColumnsNames.Length >= i) 
+                                @ColumnsNames[i++]
+                            else
+                               @member.Name
+                        </th>
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @if(Items is not null)
+            {
+                int index = 0;
+                @foreach (var item in Items)
+                {
+                    int localIndex = index;
+                    <tr @onclick="()=> OnTableRowClick(localIndex)">
+                        @foreach(var member in memberInfo)
+                        {
+                            @if(member.MemberType == MemberTypes.Property && !ColumnsToExclude.Contains(member.Name, StringComparison.OrdinalIgnoreCase))
+                            {
+                                <td>
+                                    @item.GetType().GetProperty(member.Name).GetValue(item)
+                                </td>
+                            }
+                        }
+                    </tr>
+                    index++;
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@code{
+    
+    [Parameter]
+    public EventCallback<int> OnProductSelected { get; set; }
+
+    [Parameter]
+    public List<TItem> Items { get; set; }
+    
+    [Parameter]
+    public string ColumnsToExclude { get; set; }
+
+    [Parameter]
+    public string[] ColumnsNames { get; set; }
+
+    MemberInfo[] memberInfo;
+
+    [Parameter]
+    public string CssClass { get; set; }
+
+    [Parameter]
+    public string CssThFontSize { get; set; }
+
+    [Parameter]
+    public string CssTdFontSize { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if(Items != null && Items.Count > 0)
+        {
+            Type typeOfItem = this.Items[0].GetType();
+            memberInfo = typeOfItem.GetMembers();
+        }
+    }
+
+    private void OnTableRowClick(int index)
+    {
+        Console.WriteLine($"Table row clicked index: {index}");
+
+        OnProductSelected.InvokeAsync(index);
+    }
+}

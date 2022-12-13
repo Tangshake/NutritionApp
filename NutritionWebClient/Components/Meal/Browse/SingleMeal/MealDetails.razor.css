@@ -1,0 +1,122 @@
+.meal-main {
+    width: 100%;
+    height: 95%;
+    border: 1px solid red;
+    /* background-color: #454d55; */
+    background-color: rgb(53 157 87 / 0.50)
+}
+
+.meal-summary {
+    display: flex;
+    width: 100%;
+    margin:auto;
+    padding-bottom: 20px;
+}
+
+.property {
+    margin: 0 10px 0 10px;
+    text-align: center;
+    flex-direction: column;
+    font-family: Tahoma, sans-serif;
+    color: whitesmoke;
+}
+
+.property-button {
+    text-align: center;
+    font-family: Tahoma, sans-serif;
+    color: whitesmoke;
+    background-color: #2e3842;
+}
+
+.property-button span {
+    align-self: flex-start;
+}
+
+.property-button div {
+    padding: 5px;
+}
+
+#edit-button:hover {
+    background-color: yellowgreen;
+}
+
+#save-button:hover {
+    background-color: green;
+}
+
+#remove-button:hover {
+    background-color: red;
+}
+
+.rectangle {
+    background: #FF7A59;
+    margin: auto;
+    width: 200px;
+    height: 60px;
+    border-radius: 5%;
+    border: 2px solid greenyellow;
+    text-align: center;
+    display: flex;
+}
+
+.rectangle input {
+    outline: none;
+    border: none;
+    background-color: transparent;
+}
+
+.circle-text {
+    border: 0px;
+    flex-direction: column;
+    margin: 0px;
+    font-size: 1rem;
+}
+
+.circle{
+    background: #FF7A59;
+    margin: auto;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 2px solid greenyellow;
+    text-align: center;
+}
+
+.circle-data {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    overflow: hidden;
+}
+
+.circle-data {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.meal-name label {
+    margin: 0px;
+    display: block;
+  
+
+}
+
+.edit-label {
+    text-align: center;
+}
+
+.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.65;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}

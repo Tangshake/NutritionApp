@@ -1,0 +1,24 @@
+{
+    "Routes": [
+        {
+            "DownStreamPathTemplate": "/api/myday/{userId}/{date}",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "mydayapi",
+                    "Port": 5031
+                }
+            ],
+            "UpstreamPathTemplate": "/api/myday/{userId}/{date}",
+            "UpstreamHttpMethod:": ["GET", "PUT"],
+            
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        }
+    ],
+    "GlobalConfiguration": {
+        "BaseUrl": "https://host.docker.internal:5081"
+    }
+}

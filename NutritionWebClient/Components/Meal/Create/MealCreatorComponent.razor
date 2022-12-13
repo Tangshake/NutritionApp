@@ -1,0 +1,122 @@
+@using NutritionWebClient.Components.Products
+@using NutritionWebClient.Components.Search
+
+<div class="main-meal-wrapper">
+    <div class="products-search">
+        <SearchComponent OnSearch="OnSearchStringChange" SearchPlaceholder="Wyszukaj produkt" ShowSearchAllButton="false"></SearchComponent>
+    </div>
+    <div class="products-result">
+        <AutoGridComponent Items="@products" CssClass="table-striped table-hover" ColumnsNames="@(new string[] {"Nazwa","Producent"})" ColumnsToExclude="id,kcal,protein,fat,carbohydrates,roughage" OnProductSelected="ProductSelectedEvent"></AutoGridComponent>
+    </div>
+    <div class="meal-summary">
+        @if(PredefinedMeal is not null && PredefinedMeal.Ingredients is not null)
+        {
+            <div class="meal-name">
+                <label>Nazwa: </label>
+                <i class="fa-regular fa-pencil"><input type="text" @bind-value="@PredefinedMeal.Name"/></i>
+            </div>
+        }
+        <div class="property">
+            <p class="circle-text">waga</p>
+            <div class="circle"><p class="circle-data">@Summary.Weight.ToString("N1")</p></div>
+        </div>
+        <div class="property">
+            <p class="circle-text">kcal</p>
+            <div class="circle"><p class="circle-data">@Summary.Kcal.ToString("N1")</p></div>
+        </div>
+        <div class="property">
+            <p class="circle-text">białko</p>
+            <div class="circle"><p class="circle-data">@Summary.Protein.ToString("N1")</p></div>
+        </div>
+        <div class="property">
+            <p class="circle-text">węglowodany</p>
+            <div class="circle"><p class="circle-data">@Summary.Carbohydrates.ToString("N1")</p>
+            </div>
+        </div>
+        <div class="property">
+            <p class="circle-text">tłuszcz</p>
+            <div class="circle"><p class="circle-data">@Summary.Fat.ToString("N1")</p></div>
+        </div>
+        <div class="property">
+            <p class="circle-text">błonnik</p>
+            <div class="circle"><p class="circle-data">@Summary.Roughage.ToString("N1")</p></div>
+        </div>
+    </div>
+
+
+    <div class="meal-main">
+        @if(PredefinedMeal is not null && PredefinedMeal.Ingredients is not null && PredefinedMeal.Ingredients.Count > 0)
+        {
+        <table class="table table-sm">
+            <thead>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Producent</th>
+                <th>kcal</th>
+                <th>Białko</th>
+                <th>Węglowodany</th>
+                <th>Tłuszcz</th>
+                <th>Błonnik</th>
+                <th>Waga</th>
+            </thead>
+            <tbody>
+                @{ var index = 0; }
+                @foreach (var product in PredefinedMeal.Ingredients)
+                {
+                    int localIndex = index;
+                    <tr>
+                        <td>@product.Id</td>
+                        <td>@product.Name</td>
+                        <td>@product.Manufacturer</td>
+                        <td>@(((product.Kcal * product.Weight) / 100).ToString("N1")) </td>
+                        <td>@(((product.Protein * product.Weight) / 100).ToString("N1"))</td>
+                        <td>@(((product.Carbohydrates * product.Weight) / 100).ToString("N1"))</td>
+                        <td>@(((product.Fat * product.Weight) / 100).ToString("N1"))</td>
+                        <td>@(((product.Roughage * product.Weight) / 100).ToString("N1"))</td>
+                        <td><input @onchange="@((ChangeEventArgs args) => OnWeightChange(args, localIndex))" type="number" min="1" max="10000" value="@product.Weight"/></td>
+                        <td><button @onclick="@(e => OnProductRemoveEvent(localIndex))"><span class="bi-trash"></span></button></td>
+                    </tr>
+                    index++;
+                }
+            </tbody>
+        </table>
+        <div style="width: 100%; padding: 5px 0 5px 0; border-top: 2px solid black;" >
+            <EditForm Model="@PredefinedMeal" OnSubmit="AddUserDefinedMeal">
+                @* <div class="meal-name">
+                    <label>Nazwa posiłku:</label><InputText @bind-Value="@Meal.Name" class="form-control"/>
+                </div> *@
+                <div>
+                <input type="submit" class="btn btn-primary" value="Zapisz" />
+                </div>
+            </EditForm>
+        </div>
+        }
+        else
+        {
+            @switch (Information)
+            {
+                case ShowInfo.MealSuccess:
+                    <div><span>Twój posiłek został dodany!</span></div>
+                    break;
+                case ShowInfo.MealFail: 
+                <div><span>Wystąpił problem podczas dodawania posiłu.</span></div>
+                    break;
+                case ShowInfo.NoProduct:
+                    <div><span>Twój posiłek nie posiada ani jednego składnika.</span></div>
+                    break;
+            }
+            
+        }        
+    </div>
+
+    <div class="product-details">
+        @if(Product is not null)
+        {
+            <ProductCard Item="Product" ColumnsToExclude="id,name" ></ProductCard>
+            <div class="button add-product">
+                <button @onclick="AddProductToMeal">Dodaj</button>
+            </div>
+        }
+    </div>
+    
+</div>

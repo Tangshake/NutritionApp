@@ -1,0 +1,203 @@
+.card {
+    overflow: hidden;
+}
+
+.card-selected {
+    outline: 2px solid green;
+}
+
+.card-header {
+    padding: 4px 5px 4px 5px;
+}
+
+.card li {
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: small;
+    padding: 0px;
+    margin: 0px;
+}
+
+.table {
+    margin: 1px;
+}
+
+.table thead {
+    font-size: x-small;
+}
+
+.table th {
+    padding: 1px 2px 1px 2px;
+    text-align: center;
+}
+
+.table td {
+    font-size: 12px;
+    padding: 1px 2px 1px 2px;
+}
+
+.table tbody {
+    font-size: small;
+    white-space: nowrap;
+}
+
+.edit-mode-column {
+    text-align: center;
+    background-color: rgb(247, 231, 233);
+}
+
+.edit-mode-column:hover {
+    background-color: red;
+    color: white;
+}
+
+.properties {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: smaller;
+    display: flex;
+    align-content: stretch;
+    text-align: center;
+    flex-direction: row;
+}
+
+.property {
+    margin: 0 0px 0 0px;
+    font-family: Tahoma, sans-serif;
+    color: whitesmoke;
+    flex: 1 1 0;
+}
+
+.circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #FF7A59;
+    margin: auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid greenyellow;
+    text-align: center;
+}
+
+.rectangle {
+    background: #FF7A59;
+    border: 2px solid greenyellow;
+    width: 100px;
+    height: 40px;
+    border-radius: 5%;
+}
+
+.rectangle-hour {
+    background: #FF7A59;
+    border: 2px solid greenyellow;
+    width: 100px;
+    height: 40px;
+    border-radius: 5%;
+}
+
+.circle-text {
+    color: black;
+    margin: 0px;
+}
+
+.circle-data {
+    font-weight: bold;
+    font-size: x-small;
+    margin: 0px;
+}
+
+/* **** EDIT BUTTONS *** */
+.edit-buttons button {
+    border: none;
+}
+
+.edit-button:hover {
+    color: white;
+    background-color: green
+}
+
+.cancel-button:hover {
+    color: white;
+    background-color: blue;
+}
+
+.save-button:hover {
+    color: white;
+    background-color: darkorange;
+}
+
+/* .remove-card-button {
+    color: white;
+    background-color: red;
+} */
+
+.remove-card-button:hover {
+    color: white;
+    background-color: red;
+}
+
+.edit-buttons button:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.65;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.remove-button {
+    border: none;
+}
+
+.remove-button:hover {
+    color: white;
+    background-color: red;    
+}
+
+.remove-button:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.edit-product-weight {
+    width: 50px;
+    border-width: 0px 0px 1px 0px;
+    border-color: green;
+    border-style: solid;
+    margin: 0px;
+    padding: 0px;
+    font-weight: bold;
+}
+
+.edit-meal-weight {
+    width: 50px;
+    border-width: 0px 0px 1px 0px;
+    border-color: green;
+    border-style: solid;
+    margin: 0px;
+    padding: 0px;
+    font-weight: bold;
+}
+
+.edit-card-hour {
+    background-color: transparent;
+    border-width: 0px 0px 2px 0px;
+    border-style: solid;
+    border-color: green;
+    width: 90px;
+    height: 34px;
+    font-size: 20px;
+}
+
+.edit-card-hour:focus{
+    outline: none;
+}
+
+.rectangle-hour td {
+    box-sizing: border-box;
+}

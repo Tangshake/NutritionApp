@@ -1,0 +1,32 @@
+{
+    "Routes": [
+        {
+            "DownStreamPathTemplate": "/api/register",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "registerapi",
+                    "Port": 5007
+                }
+            ],
+            "UpstreamPathTemplate": "/api/register",
+            "UpstreamHttpMethod:": ["POST"]
+        },
+        {
+            "DownStreamPathTemplate": "/api/verifyemail",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "registerapi",
+                    "Port": 5007
+                }
+            ],
+            "UpstreamPathTemplate": "/api/verifyemail",
+            "UpstreamHttpMethod:": ["POST"]
+        }
+    ],
+    "GlobalConfiguration": {
+ 
+        "BaseUrl": "https://host.docker.internal:5081"
+    }
+}

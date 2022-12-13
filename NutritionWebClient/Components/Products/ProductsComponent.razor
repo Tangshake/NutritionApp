@@ -1,0 +1,17 @@
+@using NutritionWebClient.Components.Search
+
+<div class="main-products-wrapper">
+    <div class="products-search">
+        <SearchComponent OnSearch="OnSearchStringChange" SearchPlaceholder="Wyszukaj produkt" ShowSearchAllButton="false"></SearchComponent>
+    </div>
+    <div class="products-result">
+        <AutoGridComponent Items="@products" CssClass="table-striped table-hover" ColumnsNames="@(new string[] {"Nazwa","Producent"})" ColumnsToExclude="id,kcal,protein,fat,carbohydrates,roughage" OnProductSelected="ProductSelectedEvent"></AutoGridComponent>
+    </div>
+    <div class="products-main">
+        @if(Product is not null)
+        {
+            <ProductCard Item="Product" ColumnsToExclude="id,name"></ProductCard>
+        }
+    </div>
+    
+</div>

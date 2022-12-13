@@ -1,0 +1,28 @@
+.main-products-wrapper {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    grid-template-rows: 40px 1fr;
+    grid-gap: 10px;
+    grid-template-areas:
+        "search main"
+        "result main";
+    
+    height: 100%;
+}
+
+.products-search {
+    grid-area: search;
+}
+
+.products-result {
+    background-color: rgba(216, 252, 216, 0.815);
+    grid-area: result;
+    overflow-y:auto;
+}
+
+.products-main {
+    grid-area: main;
+    padding-left: 20px;
+    overflow: hidden;
+}
+

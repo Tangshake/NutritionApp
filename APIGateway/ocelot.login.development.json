@@ -1,0 +1,62 @@
+{
+    "Routes": [
+        {
+            "DownStreamPathTemplate": "/api/login",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "loginapi",
+                    "Port": 5005
+                }
+            ],
+            "UpstreamPathTemplate": "/api/login",
+            "UpstreamHttpMethod:": ["POST"]
+        },
+        {
+            "DownStreamPathTemplate": "/api/secstamp",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "loginapi",
+                    "Port": 5005
+                }
+            ],
+            "UpstreamPathTemplate": "/api/secstamp",
+            "UpstreamHttpMethod:": ["POST"],
+            
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Bearer",
+                "AllowedScopes": []
+            }
+        },
+        {
+            "DownStreamPathTemplate": "/api/secstampupdate",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "loginapi",
+                    "Port": 5005
+                }
+            ],
+            "UpstreamPathTemplate": "/api/secstampupdate",
+            "UpstreamHttpMethod:": ["POST"]
+        },
+
+        {
+            "DownStreamPathTemplate": "/api/refresh",
+            "DownStreamScheme": "https",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "loginapi",
+                    "Port": 5005
+                }
+            ],
+            "UpstreamPathTemplate": "/api/refresh",
+            "UpstreamHttpMethod:": ["POST"]
+        }
+    ],
+    
+    "GlobalConfiguration": {
+        "BaseUrl": "https://host.docker.internal:5081"
+    }
+}

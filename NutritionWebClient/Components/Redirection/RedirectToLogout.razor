@@ -1,0 +1,8 @@
+@inject NavigationManager nav;
+
+@code {      
+    protected override void OnInitialized()
+    {
+        nav.NavigateTo("/Identity/Account/Logout/", forceLoad: true);
+    }
+}

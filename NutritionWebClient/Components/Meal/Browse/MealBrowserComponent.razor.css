@@ -1,0 +1,39 @@
+.main-meals-wrapper {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    grid-template-rows: 40px 1fr;
+    grid-gap: 10px;
+    grid-template-areas:
+        "search main"
+        "result main";
+    
+    height: 100%;
+}
+
+.meals-search {
+    grid-area: search;
+}
+
+.meals-result {
+    grid-area: result;
+    background-color: rgba(253, 253, 253, 0.534);
+    overflow-y:auto;
+}
+
+.meals-main {
+    padding-top: 30px;
+    grid-area: main;
+    display: flex;
+    justify-content: flex-start;
+    gap: 30px;
+    background-color: rgba(255, 255, 255, 0.534);
+    overflow: hidden;
+}
+
+.product-detail {
+    display: inline-block;
+}
+
+.meal-detail {
+    display: inline-block;
+}

@@ -1,0 +1,172 @@
+.main-toplinks-wrapper {
+    display: grid;
+    grid-template-columns: repeat(7, 160px) 1fr;
+    grid-template-rows: 100px;
+    grid-template-areas:
+        ". link1 link2 link3 link4 link5 link6 . link7";
+    justify-content: center;
+}
+
+/* *******MYDAY******** */
+.myday {
+    grid-area: link1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.myday input {
+    width: 60px;
+    height: 60px;
+}
+
+.myday:hover {
+    background-color: rgba(0, 128, 0, 0.521);
+    font-weight: bold;
+}
+
+/* *******PRODUCTS SEARCH******* */
+.products-search {
+    grid-area: link2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.products-search input {
+    width: 60px;
+    height: 60px;
+}
+
+.products-search:hover {
+    background-color: rgba(0, 128, 0, 0.521);
+    font-weight: bold;
+}
+
+/* *******PRODUCTS ADD******* */
+.products-add {
+    grid-area: link3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.products-add input {
+    width: 60px;
+    height: 60px;
+}
+
+.products-add:hover {
+    background-color: rgba(0, 128, 0, 0.521);
+    font-weight: bold;
+}
+
+
+/* *******MEALS SEARCH******* */
+.meals-search {
+    grid-area: link4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.meals-search input {
+    width: 60px;
+    height: 60px;
+}
+
+.meals-search:hover {
+    background-color: rgba(0, 128, 0, 0.521);
+    font-weight: bold;
+}
+
+/* *******MEALS ADD******* */
+.meals-add {
+    grid-area: link5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.meals-add input {
+    width: 60px;
+    height: 60px;
+}
+
+.meals-add:hover {
+    background-color: rgba(0, 128, 0, 0.521);
+    font-weight: bold;
+}
+
+/* *******LOGS******* */
+.logs {
+    grid-area: link6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.logs input {
+    width: 60px;
+    height: 60px;
+}
+
+.logs:hover {
+    background-color: rgba(0, 128, 0, 0.521);
+    font-weight: bold;
+}
+
+.logout:hover {
+    background-color: rgba(0, 128, 0, 0.521);
+    font-weight: bold;
+}
+
+
+/* *******LOGOUT******* */
+.logout {
+    grid-area: link7;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: rgba(255, 255, 255, 0.486);
+    text-align: center;
+    width: 250px;
+}
+
+.logout-button button {
+    background-color: rgba(0, 128, 0, 0.568);
+    border: none;
+    width: 100%;
+}
+
+.logout-button img{
+    width: 30px;
+    height: 30px;
+}
+
+.logout-user-icon {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 10px;
+}
+
+.logout-user-icon img{
+    border-radius: 50%;
+    background-color: aqua;
+    width: 60px;
+    height: 60px;
+}
+
+.logout input {
+    width: 30px;
+    height: 30px;
+}
+

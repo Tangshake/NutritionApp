@@ -1,6 +1,6 @@
 
 # NutritionApp
- 
+ Aplikacja zliczająca dzienne spożycie kalorii. Projekt powstał jako forma nauki. Temat przewodni: **Mikroserwisy**
 
 
 ## Dokumentacja
@@ -14,11 +14,13 @@
 
 ### Użyte technologie / frameworki .. ogólnie narzędzia
 
+**Platforma/Język:** .Net / C#
+
+**Client:** Blazor Server App
+
 **IDE:** Visual Studio Code
 
 **Brama API:** Ocelot
-
-**Client:** Blazor Server App
 
 **Komunikacja:** REST API, gRPC, RabbitMQ
 
